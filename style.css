@@ -4,6 +4,7 @@ body{
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background-image: linear-gradient(to bottom right, mediumspringgreen, aquamarine);
 }
 
 button{
