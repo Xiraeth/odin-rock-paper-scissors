@@ -7,8 +7,21 @@
     <link rel="stylesheet" href="style.css">
   </head>
   <body>
-    <button class="btn">Play</button>
-    <h1 class="result"></h1>
+    <h1>Rock-Paper-Scissors</h1>
+    <h3 class="welcome-msg">You are about to play best of 5 vs a random number generator. Are you lucky enough to win?</h3>
+    <div id="result"></div>
+    <!-- <div class="scoreboard">
+      <span class="blue">Your score: 0</span> <span class="red">Computer score: 0</span>
+    </div> -->
+    
+    <button class="start">Start</button>
+    <div class="choice hidden">Make your choice</div>
+    <div class="option-buttons hidden">
+      <button class="rock option">Rock</button>
+      <button class="paper option">Paper</button>
+      <button class="scissors option">Scissors</button>
+    </div>
+    <button class="restart hidden">Play again?</button>
     <script src="script.js"></script>
   </body>
 </html>

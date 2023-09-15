@@ -1,45 +1,153 @@
 'use strict';
 
-const result = document.querySelector('.result');
+const startBtn = document.querySelector('.start');
+const welcomeMsg = document.querySelector('.welcome-msg');
+const choiceEl = document.querySelector('.choice');
+const optionButtons = document.querySelector('.option-buttons');
+const result = document.querySelector('#result');
+const scoreboard = document.querySelector('.scoreboard');
+const restartBtn = document.querySelector('.restart');
+let scoreEl = document.createElement('div');;
+let playerScoreEl = document.createElement('span');;
+let computerScoreEl = document.createElement('span');;
+let playerScore;
+let compScore;
+let gameOver = false;
+
+function restartGame() {
+  [startBtn, welcomeMsg].forEach(el => el.classList.remove('hidden'));  
+  [choiceEl, optionButtons].forEach(el => el.classList.add('hidden'));
+  [scoreEl, playerScoreEl, computerScoreEl].forEach(el => el.innerHTML = '');
+  [playerScore, compScore] = [0, 0];
+  choiceEl.classList.add('hidden');
+  restartBtn.classList.add('hidden');
+  result.textContent = '';
+  gameOver = false;
+}
+
+function updateScoreboard(player, comp) {
+  playerScoreEl.textContent = `Your score: ${player}`;
+  computerScoreEl.textContent = `Computer score: ${comp}`;
+}
+
+function createScoreboard() {
+  scoreEl.classList.add('scoreboard');
+
+  playerScoreEl.textContent = `Your score: `;
+  playerScoreEl.classList.add('blue');
+
+  computerScoreEl.textContent = `Computer score: `;
+  computerScoreEl.classList.add('red');
+
+  [playerScoreEl, computerScoreEl].forEach(sc => scoreEl.appendChild(sc));
+
+  result.after(scoreEl);
+}
+
+function capitalise(string) {
+  return string.slice(0, 1).toUpperCase() + string.slice(1);
+}
 
 function getCompChoice() {
   const rnd = Math.floor(Math.random() * 3) + 1;
   let choice = '';
   switch (rnd) {
     case 1:
-      choice = `Paper`;
+      choice = `paper`;
       break;
     case 2:
-      choice = 'Rock';
+      choice = 'rock';
       break;
     case 3:
-      choice = 'Scissors';
+      choice = 'scissors';
       break;
   }
-  result.textContent = '';
-  result.insertAdjacentText('beforeend', `The computer picks ${choice.toLowerCase()}. `);
   return choice;
 }
 
-function playRound(playerSelect, compSelect) {
-  const player = playerSelect.toLowerCase();
-  const comp = compSelect.toLowerCase();
-  const validOptions = {
-    rock: '',
-    paper: '',
-    scissors: '',
-  }
-
-  if(!(player in validOptions)) return `Please enter a valid option..`;
-
-  if((player === 'rock' && comp === 'scissors') || (player === 'scissors' && comp === "paper") || (player === "paper" && comp === "rock")) return `You win! ${player.slice(0, 1).toUpperCase() + player.slice(1)} beats ${comp}.`
-  else if (player === comp) return `It's a tie! You both got ${player}.`
-  else return `You lose! ${comp.slice(0, 1).toUpperCase() + comp.slice(1)} beats ${player}.`
+function playerWins(player, comp) {
+  if((player === 'rock' && comp === 'scissors') || (player === 'scissors' && comp === "paper") || (player === "paper" && comp === "rock")) return true;
 }
 
-document.querySelector('.btn').addEventListener('click', function() {
-  const playerInput = prompt("Rock paper or scissors?");
-  const comp = getCompChoice();
+function gameEnd() {
+  gameOver = true;
+  [choiceEl, optionButtons].forEach(el => el.classList.add('hidden'));
+  restartBtn.classList.remove('hidden');
+}
 
-  result.insertAdjacentText('beforeend', playRound(playerInput, comp));
-})
+function playRound(playerSelect) {
+  const player = playerSelect;
+  const comp = getCompChoice();
+  let markup = '';
+  result.innerHTML = '';
+  
+  if(playerScore < 4 && compScore < 4) {
+    if(playerWins(player, comp)) {
+      markup = `The computer picks ${comp}. You win this round! ${capitalise(player)} beats ${comp}.`
+      playerScore++;
+    }
+    else if (player === comp) {
+      markup = `The computer picks ${comp}. It's a tie! You both got ${comp}.`;
+    }
+    else {
+      markup = `The computer picks ${comp}. You lose this round! ${capitalise(comp)} beats ${player}.`
+      compScore++;
+    }
+  }
+  else if(playerScore == 4){
+    if(playerWins(player, comp)) {
+      markup = `You win!`
+      playerScore++;
+      gameEnd();
+    } else if (player == comp){
+      markup = `The computer picks ${comp}. It's a tie! You both got ${comp}.`;
+    } else {
+      markup = `The computer picks ${comp}. You lose this round! ${capitalise(comp)} beats ${player}.`
+      compScore++;
+    }
+  } else if(compScore == 4) {
+      if(playerWins(player, comp)) {
+        markup = `The computer picks ${comp}. You win this round! ${capitalise(player)} beats ${comp}.`
+        playerScore++;
+      } else if (player == comp){
+        markup = `The computer picks ${comp}. It's a tie! You both got ${comp}.`;
+      } else {
+        markup = `You lose! Better luck next time.`
+        compScore++;
+        gameEnd();
+      }
+    }
+  result.textContent = markup;
+  updateScoreboard(playerScore, compScore);
+}
+
+startBtn.addEventListener('click', e => {
+  // Initialize game by hiding/showing the proper elements
+  [startBtn, welcomeMsg].forEach(el => el.classList.toggle('hidden'));  
+  [choiceEl, optionButtons].forEach(el => el.classList.toggle('hidden'));
+  [playerScore, compScore] = [0, 0];
+
+  createScoreboard();
+});
+
+
+function playGame() {
+  optionButtons.addEventListener('click', e => {
+    // Guard clause
+    const btn = e.target.closest('.option');
+    if(!btn) return;
+  
+    let playerChoice = '';
+
+    // Set player's choice to a string accordingly
+    if(e.target.classList.contains('rock')) playerChoice = 'rock';
+    else if (e.target.classList.contains('paper')) playerChoice = 'paper';
+    else if (e.target.classList.contains('scissors')) playerChoice = 'scissors';
+  
+    playRound(playerChoice);
+  });
+}
+
+restartBtn.addEventListener('click', restartGame);
+
+playGame();
