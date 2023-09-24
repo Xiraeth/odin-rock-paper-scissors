@@ -1,27 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Rock Paper Scissors</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
+    <script
+      src="https://kit.fontawesome.com/00de2a7224.js"
+      crossorigin="anonymous"
+    ></script>
   </head>
   <body>
     <h1>Rock-Paper-Scissors</h1>
-    <h3 class="welcome-msg">You are about to play best of 5 vs a random number generator. Are you lucky enough to win?</h3>
+    <h3 class="welcome-msg">
+      You are about to play first-to-five vs a random number generator. Are you
+      lucky enough to win?
+    </h3>
     <div id="result"></div>
     <!-- <div class="scoreboard">
       <span class="blue">Your score: 0</span> <span class="red">Computer score: 0</span>
     </div> -->
-    
+
     <button class="start">Start</button>
     <div class="choice hidden">Make your choice</div>
     <div class="option-buttons hidden">
-      <button class="rock option">Rock</button>
-      <button class="paper option">Paper</button>
-      <button class="scissors option">Scissors</button>
+      <button class="rock option">
+        <i class="fa-regular fa-hand-back-fist"></i>
+      </button>
+      <button class="paper option"><i class="fa-regular fa-hand"></i></button>
+      <button class="scissors option">
+        <i class="fa-regular fa-hand-scissors fa-rotate-90"></i>
+      </button>
     </div>
     <button class="restart hidden">Play again?</button>
-    <script src="script.js"></script>
   </body>
 </html>
